@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Наталья Воронова — Нейропсихолог и психотерапевт</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garant:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Nunito+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            forest: { 950:'#080f0b', 900:'#0e1c15', 800:'#162a1f', 700:'#1e3a2b', 600:'#2a5040', 500:'#3a6b52', 400:'#5a8b72', 300:'#8ab39c', 200:'#bdd5c8', 100:'#e0ede7' },
+            gold:   { 900:'#4a3510', 700:'#7d5c1e', 600:'#a8782a', 500:'#c9a86c', 400:'#d4b87a', 300:'#dfc898', 200:'#eedcb8', 100:'#f7f0df' },
+            ivory:  { DEFAULT:'#f7f3ec', dark:'#ede7dc' },
+          },
+          fontFamily: {
+            display: ['Cormorant Garant', 'Georgia', 'serif'],
+            body:    ['Nunito Sans', 'system-ui', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; font-size: 16px; }
+    body { font-family: 'Nunito Sans', sans-serif; background: #f7f3ec; color: #1e3a2b; overflow-x: hidden; }
+
+    .skip-link { position: absolute; top: -100px; left: 16px; background: #c9a86c; color: #fff; padding: 8px 16px; border-radius: 4px; z-index: 999; transition: top .2s; }
+    .skip-link:focus { top: 16px; }
+    :focus-visible { outline: 2px solid #c9a86c; outline-offset: 3px; }
+
+    /* ── NAV ── */
+    #nav { transition: background .4s, box-shadow .4s; }
+    #nav.scrolled { background: rgba(8,15,11,.96) !important; box-shadow: 0 2px 24px rgba(0,0,0,.4); }
+
+    /* ── HERO ── */
+    #hero { position: relative; min-height: 100svh; display: flex; align-items: flex-end; overflow: hidden; }
+    #hero-bg { position: absolute; inset: 0; background: #0e1c15; }
+    #hero-bg img { width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 1s; }
+    #hero-bg::after { content: ''; position: absolute; inset: 0; background: linear-gradient(160deg, rgba(8,15,11,.65) 0%, rgba(8,15,11,.3) 50%, rgba(8,15,11,.8) 100%); }
+    .hero-word { display: inline-block; overflow: hidden; }
+    .hero-word span { display: inline-block; }
+
+    /* ── GOLD LINE ── */
+    .gold-line { display: block; width: 48px; height: 1px; background: #c9a86c; margin-bottom: 20px; }
+
+    /* ── SECTION LABEL ── */
+    .sec-label { font-family: 'Nunito Sans', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: .2em; text-transform: uppercase; color: #c9a86c; display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+    .sec-label::before { content: ''; display: block; width: 24px; height: 1px; background: #c9a86c; }
+
+    /* ── COUNTER ── */
+    .counter-num { font-family: 'Cormorant Garant', serif; font-weight: 300; font-size: clamp(52px, 7vw, 80px); line-height: 1; color: #c9a86c; }
+
+    /* ── SERVICE CARD ── */
+    .svc-card { border: 1px solid rgba(201,168,108,.2); background: rgba(255,255,255,.04); backdrop-filter: blur(4px); transition: border-color .3s, background .3s, transform .3s; }
+    .svc-card:hover { border-color: rgba(201,168,108,.6); background: rgba(255,255,255,.08); transform: translateY(-4px); }
+
+    /* ── PROCESS STEP ── */
+    .step-num { font-family: 'Cormorant Garant', serif; font-size: 80px; font-weight: 300; line-height: 1; color: rgba(201,168,108,.15); position: absolute; top: -24px; left: -12px; pointer-events: none; }
+
+    /* ── FAQ ── */
+    .faq-body { max-height: 0; overflow: hidden; transition: max-height .4s ease, padding .3s ease; }
+    .faq-body.open { max-height: 300px; padding-bottom: 20px; }
+    .faq-icon { transition: transform .3s; }
+    .faq-item.open .faq-icon { transform: rotate(45deg); }
+
+    /* ── TESTIMONIAL SLIDER ── */
+    .slides-wrap { overflow: hidden; }
+    .slides-track { display: flex; transition: transform .6s cubic-bezier(.4,0,.2,1); }
+    .slide { min-width: 100%; }
+
+    /* ── FORM ── */
+    .f-input { width: 100%; padding: 14px 18px; background: rgba(255,255,255,.06); border: 1px solid rgba(201,168,108,.25); border-radius: 8px; color: #f7f3ec; font-family: 'Nunito Sans', sans-serif; font-size: 15px; transition: border-color .2s, background .2s; }
+    .f-input:focus { border-color: #c9a86c; background: rgba(201,168,108,.08); outline: none; }
+    .f-input::placeholder { color: rgba(247,243,236,.35); }
+    .f-input.err { border-color: #e07070; }
+    .f-input option { background: #162a1f; color: #f7f3ec; }
+
+    /* ── GOLD BTN ── */
+    .btn-gold { display: inline-flex; align-items: center; gap: 8px; background: #c9a86c; color: #0e1c15; font-family: 'Nunito Sans', sans-serif; font-weight: 600; font-size: 14px; letter-spacing: .05em; padding: 16px 36px; border-radius: 4px; border: none; cursor: pointer; transition: background .2s, box-shadow .2s, transform .15s; }
+    .btn-gold:hover { background: #d4b87a; box-shadow: 0 8px 32px rgba(201,168,108,.35); }
+    .btn-gold:active { transform: scale(.98); }
+
+    .btn-outline { display: inline-flex; align-items: center; gap: 8px; background: transparent; color: #c9a86c; font-family: 'Nunito Sans', sans-serif; font-weight: 600; font-size: 14px; letter-spacing: .05em; padding: 14px 32px; border-radius: 4px; border: 1px solid rgba(201,168,108,.5); cursor: pointer; transition: border-color .2s, background .2s; }
+    .btn-outline:hover { border-color: #c9a86c; background: rgba(201,168,108,.08); }
+
+    /* ── MOBILE MENU ── */
+    #mob-menu { max-height: 0; overflow: hidden; transition: max-height .35s ease, opacity .3s; opacity: 0; }
+    #mob-menu.open { max-height: 500px; opacity: 1; }
+
+    /* ── PARALLAX ── */
+    .parallax-img { will-change: transform; }
+
+    /* PREFERS REDUCED MOTION */
+    @media (prefers-reduced-motion: reduce) {
+      .slides-track, .faq-body { transition: none; }
+    }
+
+    /* ── SCROLLBAR ── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #0e1c15; }
+    ::-webkit-scrollbar-thumb { background: #3a6b52; border-radius: 3px; }
+  </style>
+</head>
+<body>
+
+<a href="#main" class="skip-link">Перейти к содержанию</a>
+
+<!-- ═══════════════════════ NAV ═══════════════════════ -->
+<header id="nav" class="fixed inset-x-0 top-0 z-50 bg-transparent">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10 py-5 flex items-center justify-between">
+
+    <a href="#" aria-label="На главную" class="flex flex-col leading-none">
+      <span class="font-display text-lg font-semibold text-white tracking-wide">Наталья Воронова</span>
+      <span class="text-[10px] text-gold-500 tracking-[.22em] uppercase mt-0.5">Нейропсихолог · Психотерапевт</span>
+    </a>
+
+    <nav class="hidden lg:flex items-center gap-8" aria-label="Главное меню">
+      <a href="#about"   class="text-[13px] text-white/70 hover:text-gold-400 tracking-wide transition-colors">Обо мне</a>
+      <a href="#services" class="text-[13px] text-white/70 hover:text-gold-400 tracking-wide transition-colors">Услуги</a>
+      <a href="#process" class="text-[13px] text-white/70 hover:text-gold-400 tracking-wide transition-colors">Процесс</a>
+      <a href="#faq"     class="text-[13px] text-white/70 hover:text-gold-400 tracking-wide transition-colors">FAQ</a>
+      <a href="#reviews" class="text-[13px] text-white/70 hover:text-gold-400 tracking-wide transition-colors">Отзывы</a>
+    </nav>
+
+    <div class="flex items-center gap-3">
+      <a href="#appointment" class="hidden lg:block btn-gold text-sm px-6 py-3">Записаться</a>
+      <button id="burger" aria-expanded="false" aria-controls="mob-menu" aria-label="Открыть меню"
+        class="lg:hidden p-2 text-white/80 hover:text-gold-400 transition-colors">
+        <svg id="burger-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile menu -->
+  <div id="mob-menu" class="lg:hidden bg-forest-900 border-t border-white/10">
+    <nav class="max-w-7xl mx-auto px-6 py-4 flex flex-col gap-1" aria-label="Мобильное меню">
+      <a href="#about"    class="py-3 text-sm text-white/70 hover:text-gold-400 border-b border-white/5 transition-colors">Обо мне</a>
+      <a href="#services" class="py-3 text-sm text-white/70 hover:text-gold-400 border-b border-white/5 transition-colors">Услуги</a>
+      <a href="#process"  class="py-3 text-sm text-white/70 hover:text-gold-400 border-b border-white/5 transition-colors">Процесс</a>
+      <a href="#faq"      class="py-3 text-sm text-white/70 hover:text-gold-400 border-b border-white/5 transition-colors">FAQ</a>
+      <a href="#reviews"  class="py-3 text-sm text-white/70 hover:text-gold-400 border-b border-white/5 transition-colors">Отзывы</a>
+      <a href="#appointment" class="mt-3 btn-gold justify-center">Записаться на консультацию</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- ═══════════════════════ HERO ═══════════════════════ -->
+<section id="hero" aria-labelledby="hero-h1">
+  <div id="hero-bg">
+    <img
+      src="https://images.unsplash.com/photo-1594824476967-48c8b964273f?w=1600&auto=format&fit=crop&q=85"
+      alt=""
+      aria-hidden="true"
+      id="hero-img"
+    >
+  </div>
+
+  <div class="relative z-10 w-full max-w-7xl mx-auto px-6 lg:px-10 pb-20 pt-40">
+    <div class="max-w-2xl">
+      <span class="gold-line"></span>
+      <p class="sec-label mb-6" style="color:rgba(201,168,108,.7)">Нейропсихолог · Психотерапевт</p>
+
+      <h1 id="hero-h1" class="font-display text-white mb-8" style="font-size:clamp(44px,6.5vw,88px);font-weight:300;line-height:1.08;letter-spacing:-.01em">
+        <span id="hw1" class="hero-word"><span>Наука</span></span>
+        <span class="text-gold-400 font-display"> и&nbsp;</span>
+        <span id="hw2" class="hero-word"><span>сострадание</span></span><br>
+        <em class="not-italic text-white/60" style="font-size:.7em">на вашей стороне</em>
+      </h1>
+
+      <p class="text-white/60 text-[17px] leading-relaxed mb-10 max-w-lg font-light">
+        Помогаю выбраться из тревоги, депрессии и хронического стресса.
+        Доказательные методы, без эзотерики — только то, что работает.
+      </p>
+
+      <div class="flex flex-wrap gap-4">
+        <a href="#appointment" class="btn-gold">
+          Записаться на консультацию
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4" aria-hidden="true"><path fill-rule="evenodd" d="M3 10a.75.75 0 01.75-.75h10.638L10.23 5.29a.75.75 0 111.04-1.08l5.5 5.25a.75.75 0 010 1.08l-5.5 5.25a.75.75 0 11-1.04-1.08l4.158-3.96H3.75A.75.75 0 013 10z" clip-rule="evenodd"/></svg>
+        </a>
+        <a href="#about" class="btn-outline">Узнать больше</a>
+      </div>
+    </div>
+
+    <!-- Scroll indicator -->
+    <div class="absolute bottom-8 right-10 hidden lg:flex flex-col items-center gap-2" aria-hidden="true">
+      <span class="text-white/30 text-[10px] tracking-[.2em] uppercase" style="writing-mode:vertical-rl">Scroll</span>
+      <div class="w-px h-12 bg-gradient-to-b from-gold-500 to-transparent"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════ STATS ═══════════════════════ -->
+<section class="bg-forest-900 py-14 lg:py-16" aria-label="Статистика">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10">
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-0 lg:divide-x divide-white/10">
+      <div class="text-center lg:px-8">
+        <div class="counter-num" data-target="8">0</div>
+        <p class="text-white/40 text-sm mt-2 tracking-wide">лет практики</p>
+      </div>
+      <div class="text-center lg:px-8">
+        <div class="counter-num" data-target="500">0</div>
+        <p class="text-white/40 text-sm mt-2 tracking-wide">клиентов</p>
+      </div>
+      <div class="text-center lg:px-8">
+        <div class="counter-num" data-target="3">0</div>
+        <p class="text-white/40 text-sm mt-2 tracking-wide">метода в арсенале</p>
+      </div>
+      <div class="text-center lg:px-8">
+        <div class="counter-num" data-target="96">0</div>
+        <p class="text-white/40 text-sm mt-2 tracking-wide">% рекомендуют</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════ PHILOSOPHY ═══════════════════════ -->
+<section class="py-24 bg-forest-900" aria-labelledby="phil-h2">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10">
+    <div class="max-w-xl mb-16 phil-head">
+      <span class="sec-label">Философия</span>
+      <h2 id="phil-h2" class="font-display text-white font-light leading-tight" style="font-size:clamp(32px,4vw,52px)">
+        Три принципа моей работы
+      </h2>
+    </div>
+    <div class="grid md:grid-cols-3 gap-6">
+      <div class="phil-card border border-white/8 rounded-sm p-8">
+        <div class="w-10 h-10 rounded-full border border-gold-500 flex items-center justify-center mb-6" aria-hidden="true">
+          <span class="font-display text-gold-400 text-xl">I</span>
+        </div>
+        <h3 class="font-display text-white text-2xl font-light mb-3">Доказательность</h3>
+        <p class="text-white/50 text-sm leading-relaxed">Только методы с клинически подтверждённой эффективностью: КПТ, EMDR, схема-терапия. Никакой эзотерики.</p>
+      </div>
+      <div class="phil-card border border-white/8 rounded-sm p-8">
+        <div class="w-10 h-10 rounded-full border border-gold-500 flex items-center justify-center mb-6" aria-hidden="true">
+          <span class="font-display text-gold-400 text-xl">II</span>
+        </div>
+        <h3 class="font-display text-white text-2xl font-light mb-3">Безопасность</h3>
+        <p class="text-white/50 text-sm leading-relaxed">Абсолютная конфиденциальность, отсутствие осуждения и давления. Вы задаёте темп — я иду рядом.</p>
+      </div>
+      <div class="phil-card border border-white/8 rounded-sm p-8">
+        <div class="w-10 h-10 rounded-full border border-gold-500 flex items-center justify-center mb-6" aria-hidden="true">
+          <span class="font-display text-gold-400 text-xl">III</span>
+        </div>
+        <h3 class="font-display text-white text-2xl font-light mb-3">Результат</h3>
+        <p class="text-white/50 text-sm leading-relaxed">Конкретные инструменты, которые работают вне кабинета. Терапия — это не разговоры, а навыки.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════ ABOUT ═══════════════════════ -->
+<section id="about" class="py-24 lg:py-32 bg-ivory" aria-labelledby="about-h2">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10">
+    <div class="grid lg:grid-cols-2 gap-16 xl:gap-24 items-center">
+
+      <!-- Photo with floating elements -->
+      <div class="relative about-photo">
+        <div class="relative overflow-hidden rounded-sm aspect-[3/4] max-w-md lg:max-w-none">
+          <img
+            src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=800&auto=format&fit=crop&q=80"
+            alt="Наталья Воронова — нейропсихолог"
+            class="parallax-img w-full h-full object-cover"
+            id="about-img"
+          >
+          <div class="absolute inset-0 bg-gradient-to-t from-forest-900/40 to-transparent"></div>
+        </div>
+        <!-- Gold corner accent -->
+        <div class="absolute -bottom-5 -right-5 w-32 h-32 border border-gold-500/30 rounded-sm" aria-hidden="true"></div>
+        <div class="absolute -top-5 -left-5 w-20 h-20 border border-gold-500/20 rounded-sm" aria-hidden="true"></div>
+        <!-- Credential badge -->
+        <div class="absolute bottom-8 -right-6 hidden lg:block bg-forest-900 border border-gold-500/30 rounded-sm px-5 py-4 shadow-xl" aria-hidden="true">
+          <p class="text-gold-400 text-xs tracking-widest uppercase mb-1">Образование</p>
+          <p class="text-white text-sm font-medium">МГУ + ВШЭ</p>
+          <p class="text-white/40 text-xs">Клиническая психология</p>
+        </div>
+      </div>
+
+      <!-- Text -->
+      <div class="about-text">
+        <span class="sec-label">Обо мне</span>
+        <h2 id="about-h2" class="font-display text-forest-900 font-light leading-tight mb-6" style="font-size:clamp(32px,4vw,52px)">
+          Меня зовут<br><em class="not-italic text-gold-600">Наталья Воронова</em>
+        </h2>
+        <div class="space-y-4 text-forest-800/70 leading-relaxed text-[15px]">
+          <p>Я нейропсихолог и психотерапевт с 9-летней практикой. Специализируюсь на тревожных расстройствах, депрессии, посттравматическом стрессе и психосоматике.</p>
+          <p>Закончила клиническую психологию в МГУ, прошла сертификацию по КПТ в Великобритании и EMDR — в Германии. Регулярно прохожу супервизию и личную терапию.</p>
+          <p>В работе я опираюсь на нейронауку и доказательные методы — потому что понимаю, что происходит в мозге, и могу объяснить, почему ваш опыт именно такой.</p>
+        </div>
+
+        <div class="mt-8 grid grid-cols-2 gap-3">
+          <div class="bg-white border border-gold-200 rounded-sm p-4">
+            <p class="text-forest-900 font-semibold text-sm mb-1">КПТ</p>
+            <p class="text-forest-800/50 text-xs">Certified CBT Therapist, BABCP</p>
+          </div>
+          <div class="bg-white border border-gold-200 rounded-sm p-4">
+            <p class="text-forest-900 font-semibold text-sm mb-1">EMDR</p>
+            <p class="text-forest-800/50 text-xs">Европейская ассоциация EMDR</p>
+          </div>
+          <div class="bg-white border border-gold-200 rounded-sm p-4">
+            <p class="text-forest-900 font-semibold text-sm mb-1">Схема-терапия</p>
+            <p class="text-forest-800/50 text-xs">ISST Member</p>
+          </div>
+          <div class="bg-white border border-gold-200 rounded-sm p-4">
+            <p class="text-forest-900 font-semibold text-sm mb-1">Нейрофидбэк</p>
+            <p class="text-forest-800/50 text-xs">Applied Neuroscience</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════ SERVICES ═══════════════════════ -->
+<section id="services" class="py-24 lg:py-32 bg-forest-900" aria-labelledby="svc-h2">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10">
+    <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between mb-14 gap-6">
+      <div class="svc-head">
+        <span class="sec-label">Услуги</span>
+        <h2 id="svc-h2" class="font-display text-white font-light leading-tight" style="font-size:clamp(32px,4vw,52px)">
+          Форматы работы
+        </h2>
+      </div>
+      <p class="text-white/40 text-sm max-w-xs leading-relaxed">Выбор формата зависит от вашего запроса. Обсудим на первой встрече.</p>
+    </div>
+
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+      <article class="svc-card rounded-sm p-7 col-span-1">
+        <div class="text-gold-500 mb-5" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor" class="w-8 h-8"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg>
+        </div>
+        <h3 class="font-display text-white text-2xl font-light mb-3">Индивидуальная терапия</h3>
+        <p class="text-white/45 text-sm leading-relaxed mb-6">Работа один на один — тревога, депрессия, кризис, отношения, самооценка и многое другое</p>
+        <div class="flex items-center justify-between pt-5 border-t border-white/10">
+          <span class="text-gold-400 font-semibold text-sm">4 000 ₽ / сессия</span>
+          <span class="text-white/30 text-xs">50 мин</span>
+        </div>
+      </article>
+
+      <article class="svc-card rounded-sm p-7">
+        <div class="text-gold-500 mb-5" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor" class="w-8 h-8"><path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z"/></svg>
+        </div>
+        <h3 class="font-display text-white text-2xl font-light mb-3">Семейная и парная терапия</h3>
+        <p class="text-white/45 text-sm leading-relaxed mb-6">Конфликты, кризис доверия, развод, трудности после рождения ребёнка</p>
+        <div class="flex items-center justify-between pt-5 border-t border-white/10">
+          <span class="text-gold-400 font-semibold text-sm">6 000 ₽ / сессия</span>
+          <span class="text-white/30 text-xs">80 мин</span>
+        </div>
+      </article>
+
+      <article class="svc-card rounded-sm p-7">
+        <div class="text-gold-500 mb-5" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor" class="w-8 h-8"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"/></svg>
+        </div>
+        <h3 class="font-display text-white text-2xl font-light mb-3">Терапия тревоги и стресса</h3>
+        <p class="text-white/45 text-sm leading-relaxed mb-6">Панические атаки, ОКР, фобии, хронический стресс, выгорание</p>
+        <div class="flex items-center justify-between pt-5 border-t border-white/10">
+          <span class="text-gold-400 font-semibold text-sm">4 000 ₽ / сессия</span>
+          <span class="text-white/30 text-xs">50 мин</span>
+        </div>
+      </article>
+
+      <article class="svc-card rounded-sm p-7">
+        <div class="text-gold-500 mb-5" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor" class="w-8 h-8"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5M9 11.25v1.5M12 9v3.75m3-6v6"/></svg>
+        </div>
+        <h3 class="font-display text-white text-2xl font-light mb-3">EMDR-терапия</h3>
+        <p class="text-white/45 text-sm leading-relaxed mb-6">Работа с психологической травмой, ПТСР, тяжёлыми воспоминаниями</p>
+        <div class="flex items-center justify-between pt-5 border-t border-white/10">
+          <span class="text-gold-400 font-semibold text-sm">5 000 ₽ / сессия</span>
+          <span class="text-white/30 text-xs">70 мин</span>
+        </div>
+      </article>
+
+      <article class="svc-card rounded-sm p-7">
+        <div class="text-gold-500 mb-5" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor" class="w-8 h-8"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253M3 12c0 .778.099 1.533.284 2.253"/></svg>
+        </div>
+        <h3 class="font-display text-white text-2xl font-light mb-3">Онлайн-консультации</h3>
+        <p class="text-white/45 text-sm leading-relaxed mb-6">Полноценная терапия в Zoom из любой точки мира, в удобное время</p>
+        <div class="flex items-center justify-between pt-5 border-t border-white/10">
+          <span class="text-gold-400 font-semibold text-sm">4 000 ₽ / сессия</span>
+          <span class="text-white/30 text-xs">50 мин</span>
+        </div>
+      </article>
+
+      <!-- CTA card -->
+      <article class="rounded-sm p-7 bg-gradient-to-br from-gold-600 to-gold-700 flex flex-col justify-between">
+        <div>
+          <p class="font-display text-forest-900 text-2xl font-semibold mb-3">Не знаете, с чего начать?</p>
+          <p class="text-forest-900/70 text-sm leading-relaxed">Первый звонок бесплатный. Расскажите о своей ситуации — я помогу понять, какой формат подойдёт.</p>
+        </div>
+        <a href="#appointment" class="mt-6 inline-flex items-center gap-2 bg-forest-900 text-gold-400 text-sm font-semibold px-5 py-3 rounded-sm hover:bg-forest-800 transition-colors self-start">
+          Первый звонок — бесплатно
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4" aria-hidden="true"><path fill-rule="evenodd" d="M3 10a.75.75 0 01.75-.75h10.638L10.23 5.29a.75.75 0 111.04-1.08l5.5 5.25a.75.75 0 010 1.08l-5.5 5.25a.75.75 0 11-1.04-1.08l4.158-3.96H3.75A.75.75 0 013 10z" clip-rule="evenodd"/></svg>
+        </a>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════ PROCESS ═══════════════════════ -->
+<section id="process" class="py-24 lg:py-32 bg-ivory" aria-labelledby="proc-h2">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10">
+    <div class="max-w-xl mb-16 proc-head">
+      <span class="sec-label">Как это работает</span>
+      <h2 id="proc-h2" class="font-display text-forest-900 font-light leading-tight" style="font-size:clamp(32px,4vw,52px)">
+        Путь от первого контакта<br>до первых изменений
+      </h2>
+    </div>
+
+    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+      <div class="proc-step relative pl-4">
+        <div class="step-num" aria-hidden="true">1</div>
+        <div class="relative z-10">
+          <div class="w-10 h-px bg-gold-500 mb-5" aria-hidden="true"></div>
+          <h3 class="font-display text-forest-900 text-xl font-semibold mb-3">Заявка</h3>
+          <p class="text-forest-800/55 text-sm leading-relaxed">Заполните форму или напишите мне. Отвечу в течение часа в рабочее время.</p>
+        </div>
+      </div>
+      <div class="proc-step relative pl-4">
+        <div class="step-num" aria-hidden="true">2</div>
+        <div class="relative z-10">
+          <div class="w-10 h-px bg-gold-500 mb-5" aria-hidden="true"></div>
+          <h3 class="font-display text-forest-900 text-xl font-semibold mb-3">Знакомство</h3>
+          <p class="text-forest-800/55 text-sm leading-relaxed">Бесплатный 15-минутный звонок: вы рассказываете о запросе, я — о своём подходе.</p>
+        </div>
+      </div>
+      <div class="proc-step relative pl-4">
+        <div class="step-num" aria-hidden="true">3</div>
+        <div class="relative z-10">
+          <div class="w-10 h-px bg-gold-500 mb-5" aria-hidden="true"></div>
+          <h3 class="font-display text-forest-900 text-xl font-semibold mb-3">Диагностика</h3>
+          <p class="text-forest-800/55 text-sm leading-relaxed">Первые 2–3 сессии: детально разбираем запрос, составляем индивидуальный план.</p>
+        </div>
+      </div>
+      <div class="proc-step relative pl-4">
+        <div class="step-num" aria-hidden="true">4</div>
+        <div class="relative z-10">
+          <div class="w-10 h-px bg-gold-500 mb-5" aria-hidden="true"></div>
+          <h3 class="font-display text-forest-900 text-xl font-semibold mb-3">Прогресс</h3>
+          <p class="text-forest-800/55 text-sm leading-relaxed">Регулярные сессии + инструменты между встречами. Первые изменения — уже через 4–6 недель.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════ FAQ ═══════════════════════ -->
+<section id="faq" class="py-24 bg-ivory" aria-labelledby="faq-h2">
+  <div class="max-w-4xl mx-auto px-6 lg:px-10">
+    <div class="text-center mb-14">
+      <span class="sec-label justify-center">FAQ</span>
+      <h2 id="faq-h2" class="font-display text-forest-900 font-light" style="font-size:clamp(30px,4vw,48px)">Частые вопросы</h2>
+    </div>
+
+    <div class="space-y-3" id="faq-list">
+      <div class="faq-item bg-white border border-gold-200/60 rounded-sm">
+        <button class="faq-trigger w-full flex items-center justify-between p-6 text-left" aria-expanded="false">
+          <span class="font-display text-forest-900 text-xl font-light">Сколько сессий мне понадобится?</span>
+          <span class="faq-icon text-gold-500 text-2xl leading-none ml-4 shrink-0">+</span>
+        </button>
+        <div class="faq-body px-6 text-forest-800/60 text-sm leading-relaxed">
+          Всё индивидуально. Краткосрочная фокусированная работа (8–12 сессий) подходит для конкретного запроса. Для глубинной работы может потребоваться год и более. Обсуждаем и корректируем план по ходу.
+        </div>
+      </div>
+
+      <div class="faq-item bg-white border border-gold-200/60 rounded-sm">
+        <button class="faq-trigger w-full flex items-center justify-between p-6 text-left" aria-expanded="false">
+          <span class="font-display text-forest-900 text-xl font-light">Как проходит онлайн-терапия?</span>
+          <span class="faq-icon text-gold-500 text-2xl leading-none ml-4 shrink-0">+</span>
+        </button>
+        <div class="faq-body px-6 text-forest-800/60 text-sm leading-relaxed">
+          Через Zoom или Google Meet. Полноценный формат — ни в чём не уступает очному. Единственное требование: тихое место, где вас не прервут. Записи сессий не ведутся.
+        </div>
+      </div>
+
+      <div class="faq-item bg-white border border-gold-200/60 rounded-sm">
+        <button class="faq-trigger w-full flex items-center justify-between p-6 text-left" aria-expanded="false">
+          <span class="font-display text-forest-900 text-xl font-light">Это конфиденциально?</span>
+          <span class="faq-icon text-gold-500 text-2xl leading-none ml-4 shrink-0">+</span>
+        </button>
+        <div class="faq-body px-6 text-forest-800/60 text-sm leading-relaxed">
+          Абсолютно. Я придерживаюсь Этического кодекса РПО. Информация о клиентах не передаётся третьим лицам ни при каких условиях (кроме прямой угрозы жизни — это требование закона).
+        </div>
+      </div>
+
+      <div class="faq-item bg-white border border-gold-200/60 rounded-sm">
+        <button class="faq-trigger w-full flex items-center justify-between p-6 text-left" aria-expanded="false">
+          <span class="font-display text-forest-900 text-xl font-light">Чем КПТ отличается от EMDR?</span>
+          <span class="faq-icon text-gold-500 text-2xl leading-none ml-4 shrink-0">+</span>
+        </button>
+        <div class="faq-body px-6 text-forest-800/60 text-sm leading-relaxed">
+          КПТ работает с мышлением и поведением — меняет паттерны, которые поддерживают тревогу или депрессию. EMDR — метод переработки травматических воспоминаний через билатеральную стимуляцию. Часто я использую оба метода в работе с одним клиентом.
+        </div>
+      </div>
+
+      <div class="faq-item bg-white border border-gold-200/60 rounded-sm">
+        <button class="faq-trigger w-full flex items-center justify-between p-6 text-left" aria-expanded="false">
+          <span class="font-display text-forest-900 text-xl font-light">Нужно ли мне что-то делать между сессиями?</span>
+          <span class="faq-icon text-gold-500 text-2xl leading-none ml-4 shrink-0">+</span>
+        </button>
+        <div class="faq-body px-6 text-forest-800/60 text-sm leading-relaxed">
+          Да, и это один из ключевых факторов результата. Между сессиями — небольшие практики, ведение дневника или выполнение поведенческих экспериментов. Это не домашнее задание в школьном смысле — это живая часть терапии.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════ TESTIMONIALS ═══════════════════════ -->
+<section id="reviews" class="py-24 lg:py-32 bg-forest-900" aria-labelledby="rev-h2">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10">
+    <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between mb-12 gap-6">
+      <div>
+        <span class="sec-label">Отзывы</span>
+        <h2 id="rev-h2" class="font-display text-white font-light" style="font-size:clamp(30px,4vw,48px)">Истории клиентов</h2>
+      </div>
+      <div class="flex gap-3" role="group" aria-label="Листать отзывы">
+        <button id="prev-btn" aria-label="Предыдущий отзыв"
+          class="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center text-white/60 hover:border-gold-500 hover:text-gold-400 transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5" aria-hidden="true"><path fill-rule="evenodd" d="M17 10a.75.75 0 01-.75.75H5.612l4.158 3.96a.75.75 0 11-1.04 1.08l-5.5-5.25a.75.75 0 010-1.08l5.5-5.25a.75.75 0 111.04 1.08L5.612 9.25H16.25A.75.75 0 0117 10z" clip-rule="evenodd"/></svg>
+        </button>
+        <button id="next-btn" aria-label="Следующий отзыв"
+          class="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center text-white/60 hover:border-gold-500 hover:text-gold-400 transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5" aria-hidden="true"><path fill-rule="evenodd" d="M3 10a.75.75 0 01.75-.75h10.638L10.23 5.29a.75.75 0 111.04-1.08l5.5 5.25a.75.75 0 010 1.08l-5.5 5.25a.75.75 0 11-1.04-1.08l4.158-3.96H3.75A.75.75 0 013 10z" clip-rule="evenodd"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="slides-wrap">
+      <div class="slides-track" id="slider" aria-live="polite">
+        <!-- Slide 1 -->
+        <div class="slide" role="group" aria-label="Отзыв 1 из 3">
+          <div class="grid md:grid-cols-3 gap-5">
+            <blockquote class="border border-white/10 rounded-sm p-7">
+              <p class="font-display text-white/70 text-[22px] font-light leading-snug mb-6">&ldquo;После полугода работы с Натальей я перестала жить в постоянном страхе. Впервые за 5 лет сплю нормально.&rdquo;</p>
+              <footer class="flex items-center gap-3">
+                <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?w=80&h=80&fit=crop" alt="" class="w-10 h-10 rounded-full object-cover" aria-hidden="true">
+                <div>
+                  <cite class="text-white text-sm font-semibold not-italic">Ирина К.</cite>
+                  <p class="text-white/30 text-xs">Маркетолог, 34 года</p>
+                </div>
+              </footer>
+            </blockquote>
+            <blockquote class="border border-white/10 rounded-sm p-7">
+              <p class="font-display text-white/70 text-[22px] font-light leading-snug mb-6">&ldquo;Обращался по поводу выгорания. Наталья помогла понять корень, а не просто заглушить симптомы. Очень профессиональный подход.&rdquo;</p>
+              <footer class="flex items-center gap-3">
+                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop" alt="" class="w-10 h-10 rounded-full object-cover" aria-hidden="true">
+                <div>
+                  <cite class="text-white text-sm font-semibold not-italic">Дмитрий В.</cite>
+                  <p class="text-white/30 text-xs">Предприниматель, 41 год</p>
+                </div>
+              </footer>
+            </blockquote>
+            <blockquote class="border border-gold-500/30 bg-gold-500/5 rounded-sm p-7">
+              <p class="font-display text-white/70 text-[22px] font-light leading-snug mb-6">&ldquo;Работали с детской травмой через EMDR. Было страшно начинать, но результат превзошёл ожидания. Очень благодарна.&rdquo;</p>
+              <footer class="flex items-center gap-3">
+                <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80&h=80&fit=crop" alt="" class="w-10 h-10 rounded-full object-cover" aria-hidden="true">
+                <div>
+                  <cite class="text-white text-sm font-semibold not-italic">Анна М.</cite>
+                  <p class="text-white/30 text-xs">Врач, 39 лет</p>
+                </div>
+              </footer>
+            </blockquote>
+          </div>
+        </div>
+
+        <!-- Slide 2 -->
+        <div class="slide" role="group" aria-label="Отзыв 2 из 3">
+          <div class="grid md:grid-cols-3 gap-5">
+            <blockquote class="border border-white/10 rounded-sm p-7">
+              <p class="font-display text-white/70 text-[22px] font-light leading-snug mb-6">&ldquo;Первый психолог, которому я доверяю полностью. Работаем уже год — это лучшее вложение в себя.&rdquo;</p>
+              <footer class="flex items-center gap-3">
+                <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=80&h=80&fit=crop" alt="" class="w-10 h-10 rounded-full object-cover" aria-hidden="true">
+                <div>
+                  <cite class="text-white text-sm font-semibold not-italic">Светлана Р.</cite>
+                  <p class="text-white/30 text-xs">Архитектор, 28 лет</p>
+                </div>
+              </footer>
+            </blockquote>
+            <blockquote class="border border-white/10 rounded-sm p-7">
+              <p class="font-display text-white/70 text-[22px] font-light leading-snug mb-6">&ldquo;Наталья объясняет механизмы тревоги через нейронауку — это помогло мне понять себя совершенно по-новому.&rdquo;</p>
+              <footer class="flex items-center gap-3">
+                <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80&h=80&fit=crop" alt="" class="w-10 h-10 rounded-full object-cover" aria-hidden="true">
+                <div>
+                  <cite class="text-white text-sm font-semibold not-italic">Алексей Г.</cite>
+                  <p class="text-white/30 text-xs">Программист, 32 года</p>
+                </div>
+              </footer>
+            </blockquote>
+            <blockquote class="border border-gold-500/30 bg-gold-500/5 rounded-sm p-7">
+              <p class="font-display text-white/70 text-[22px] font-light leading-snug mb-6">&ldquo;Прошли с мужем парную терапию. Не только сохранили брак — по-настоящему стали ближе. Спасибо.&rdquo;</p>
+              <footer class="flex items-center gap-3">
+                <img src="https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=80&h=80&fit=crop" alt="" class="w-10 h-10 rounded-full object-cover" aria-hidden="true">
+                <div>
+                  <cite class="text-white text-sm font-semibold not-italic">Екатерина и Николай</cite>
+                  <p class="text-white/30 text-xs">Семейная терапия</p>
+                </div>
+              </footer>
+            </blockquote>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dots -->
+    <div class="flex gap-2 mt-8" role="tablist" aria-label="Слайды отзывов">
+      <button class="dot w-8 h-px bg-gold-500 transition-all" data-idx="0" role="tab" aria-selected="true" aria-label="Слайд 1"></button>
+      <button class="dot w-4 h-px bg-white/20 transition-all" data-idx="1" role="tab" aria-selected="false" aria-label="Слайд 2"></button>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════ APPOINTMENT ═══════════════════════ -->
+<section id="appointment" class="py-24 lg:py-32 bg-ivory" aria-labelledby="appt-h2">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10">
+    <div class="grid lg:grid-cols-5 gap-12 xl:gap-20 items-stretch">
+
+      <!-- Left photo + info -->
+      <div class="lg:col-span-2 flex flex-col gap-6">
+        <div class="overflow-hidden rounded-sm aspect-[4/3] lg:aspect-auto lg:flex-1">
+          <img
+            src="https://images.unsplash.com/photo-1521747116042-5a810fda9664?w=800&auto=format&fit=crop&q=80"
+            alt="Кабинет психотерапевта"
+            class="w-full h-full object-cover"
+          >
+        </div>
+        <div class="bg-forest-900 rounded-sm p-7">
+          <h3 class="font-display text-white text-2xl font-light mb-5">Контакты</h3>
+          <div class="space-y-4">
+            <a href="tel:+79001234567" class="flex items-center gap-3 text-white/60 hover:text-gold-400 transition-colors text-sm">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4 shrink-0 text-gold-500" aria-hidden="true"><path fill-rule="evenodd" d="M1.5 4.5a3 3 0 013-3h1.372c.86 0 1.61.586 1.819 1.42l1.105 4.423a1.875 1.875 0 01-.694 1.955l-1.293.97c-.135.101-.164.249-.126.352a11.285 11.285 0 006.697 6.697c.103.038.25.009.352-.126l.97-1.293a1.875 1.875 0 011.955-.694l4.423 1.105c.834.209 1.42.959 1.42 1.82V19.5a3 3 0 01-3 3h-2.25C8.552 22.5 1.5 15.448 1.5 6.75V4.5z" clip-rule="evenodd"/></svg>
+              +7 (900) 123-45-67
+            </a>
+            <a href="https://t.me/voronova_psy" class="flex items-center gap-3 text-white/60 hover:text-gold-400 transition-colors text-sm" rel="noopener">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4 shrink-0 text-gold-500" aria-hidden="true"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+              @voronova_psy
+            </a>
+            <p class="flex items-center gap-3 text-white/40 text-sm">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4 shrink-0 text-gold-500" aria-hidden="true"><path fill-rule="evenodd" d="M11.54 22.351l.07.04.028.016a.76.76 0 00.723 0l.028-.015.071-.041a16.975 16.975 0 001.144-.742 19.58 19.58 0 002.683-2.282c1.944-1.99 3.963-4.98 3.963-8.827a8.25 8.25 0 00-16.5 0c0 3.846 2.02 6.837 3.963 8.827a19.58 19.58 0 002.682 2.282 16.975 16.975 0 001.145.742z" clip-rule="evenodd"/></svg>
+              Москва, Патриаршие пруды
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Form -->
+      <div class="lg:col-span-3">
+        <span class="sec-label">Запись</span>
+        <h2 id="appt-h2" class="font-display text-forest-900 font-light leading-tight mb-8" style="font-size:clamp(28px,3.5vw,46px)">
+          Готовы начать?<br>
+          <span class="text-gold-600">Сделайте первый шаг.</span>
+        </h2>
+
+        <form id="appt-form" novalidate aria-label="Форма записи на консультацию" class="bg-forest-900 rounded-sm p-7 lg:p-9 space-y-5">
+          <div class="grid sm:grid-cols-2 gap-5">
+            <div>
+              <label for="fn" class="block text-white/50 text-xs uppercase tracking-widest mb-2">Имя <span class="text-gold-500" aria-hidden="true">*</span></label>
+              <input type="text" id="fn" name="name" class="f-input" placeholder="Анна" required autocomplete="given-name" aria-required="true">
+            </div>
+            <div>
+              <label for="fp" class="block text-white/50 text-xs uppercase tracking-widest mb-2">Телефон <span class="text-gold-500" aria-hidden="true">*</span></label>
+              <input type="tel" id="fp" name="phone" class="f-input" placeholder="+7 (___) ___-__-__" required autocomplete="tel" aria-required="true">
+            </div>
+          </div>
+
+          <div>
+            <label for="fc" class="block text-white/50 text-xs uppercase tracking-widest mb-2">Способ связи</label>
+            <select id="fc" name="contact" class="f-input">
+              <option value="">Выберите...</option>
+              <option value="call">Звонок</option>
+              <option value="telegram">Telegram</option>
+              <option value="whatsapp">WhatsApp</option>
+              <option value="email">Email</option>
+            </select>
+          </div>
+
+          <fieldset>
+            <legend class="block text-white/50 text-xs uppercase tracking-widest mb-3">Формат консультации</legend>
+            <div class="grid grid-cols-2 gap-3">
+              <label class="flex items-center gap-3 p-4 border border-white/15 rounded-sm cursor-pointer hover:border-gold-500/50 transition-colors has-[:checked]:border-gold-500 has-[:checked]:bg-gold-500/5">
+                <input type="radio" name="fmt" value="online" class="accent-gold-500">
+                <span>
+                  <span class="text-white text-sm font-medium block">Онлайн</span>
+                  <span class="text-white/30 text-xs">Zoom / Meet</span>
+                </span>
+              </label>
+              <label class="flex items-center gap-3 p-4 border border-white/15 rounded-sm cursor-pointer hover:border-gold-500/50 transition-colors has-[:checked]:border-gold-500 has-[:checked]:bg-gold-500/5">
+                <input type="radio" name="fmt" value="offline" class="accent-gold-500">
+                <span>
+                  <span class="text-white text-sm font-medium block">Очно</span>
+                  <span class="text-white/30 text-xs">Патриаршие пруды</span>
+                </span>
+              </label>
+            </div>
+          </fieldset>
+
+          <div>
+            <label for="fm" class="block text-white/50 text-xs uppercase tracking-widest mb-2">Запрос <span class="text-white/25 normal-case tracking-normal">(необязательно)</span></label>
+            <textarea id="fm" name="message" rows="4" class="f-input resize-none"
+              placeholder="Кратко опишите, с чем хотите обратиться..."></textarea>
+          </div>
+
+          <label class="flex items-start gap-3 cursor-pointer">
+            <input type="checkbox" id="fpr" name="privacy" required aria-required="true" class="mt-0.5 accent-gold-500 shrink-0">
+            <span class="text-white/30 text-xs leading-relaxed">
+              Согласен(а) на обработку персональных данных согласно
+              <a href="#" class="text-gold-500 hover:underline">политике конфиденциальности</a>
+            </span>
+          </label>
+
+          <button type="submit" class="btn-gold w-full justify-center text-base py-4">
+            Отправить заявку
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5" aria-hidden="true"><path fill-rule="evenodd" d="M3 10a.75.75 0 01.75-.75h10.638L10.23 5.29a.75.75 0 111.04-1.08l5.5 5.25a.75.75 0 010 1.08l-5.5 5.25a.75.75 0 11-1.04-1.08l4.158-3.96H3.75A.75.75 0 013 10z" clip-rule="evenodd"/></svg>
+          </button>
+          <p class="text-center text-white/25 text-xs">Отвечу в течение часа · пн–пт 10:00–20:00</p>
+
+          <div id="form-ok" class="hidden bg-gold-500/10 border border-gold-500/30 rounded-sm p-5 text-center" role="alert" aria-live="polite">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-8 h-8 text-gold-400 mx-auto mb-2" aria-hidden="true"><path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clip-rule="evenodd"/></svg>
+            <p class="font-display text-white text-xl font-light">Заявка принята!</p>
+            <p class="text-white/40 text-sm mt-1">Свяжусь с вами в ближайшее время</p>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════ FINAL CTA ═══════════════════════ -->
+<section class="relative py-28 lg:py-36 overflow-hidden" aria-labelledby="cta-h2">
+  <div class="absolute inset-0 bg-forest-950" aria-hidden="true">
+    <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1600&auto=format&fit=crop&q=60" alt="" class="w-full h-full object-cover opacity-10">
+    <div class="absolute inset-0 bg-gradient-to-b from-forest-950 via-transparent to-forest-950"></div>
+  </div>
+  <div class="relative z-10 max-w-4xl mx-auto px-6 lg:px-10 text-center">
+    <div class="flex justify-center mb-6" aria-hidden="true">
+      <div class="w-px h-16 bg-gradient-to-b from-transparent to-gold-500"></div>
+    </div>
+    <span class="sec-label justify-center mb-6">Последний шаг</span>
+    <h2 id="cta-h2" class="font-display text-white font-light mb-6" style="font-size:clamp(36px,5.5vw,72px);line-height:1.1">
+      Вы заслуживаете<br>
+      <em class="not-italic text-gold-400">лучшей версии себя.</em>
+    </h2>
+    <p class="text-white/50 text-lg mb-12 max-w-xl mx-auto leading-relaxed font-light">
+      Первый шаг — самый важный. И самый сложный.<br>
+      Напишите прямо сейчас — я отвечу лично.
+    </p>
+    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+      <a href="#appointment" class="btn-gold text-base px-10 py-5">
+        Записаться на консультацию
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5" aria-hidden="true"><path fill-rule="evenodd" d="M3 10a.75.75 0 01.75-.75h10.638L10.23 5.29a.75.75 0 111.04-1.08l5.5 5.25a.75.75 0 010 1.08l-5.5 5.25a.75.75 0 11-1.04-1.08l4.158-3.96H3.75A.75.75 0 013 10z" clip-rule="evenodd"/></svg>
+      </a>
+      <a href="https://t.me/voronova_psy" rel="noopener" class="btn-outline text-base px-10 py-5">
+        Написать в Telegram
+      </a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ═══════════════════════ FOOTER ═══════════════════════ -->
+<footer class="bg-forest-950 py-12 border-t border-white/5" role="contentinfo">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10">
+    <div class="grid sm:grid-cols-3 gap-8 mb-10">
+      <div>
+        <p class="font-display text-xl font-light text-white mb-1">Наталья Воронова</p>
+        <p class="text-[10px] text-gold-500/70 tracking-[.2em] uppercase mb-4">Нейропсихолог · Психотерапевт</p>
+        <p class="text-white/30 text-sm leading-relaxed">Доказательная психотерапия. Наука и сострадание — на вашей стороне.</p>
+      </div>
+      <div>
+        <h3 class="text-xs font-semibold text-white/40 uppercase tracking-widest mb-4">Навигация</h3>
+        <ul class="space-y-2">
+          <li><a href="#about"    class="text-sm text-white/40 hover:text-gold-400 transition-colors">Обо мне</a></li>
+          <li><a href="#services" class="text-sm text-white/40 hover:text-gold-400 transition-colors">Услуги</a></li>
+          <li><a href="#process"  class="text-sm text-white/40 hover:text-gold-400 transition-colors">Как проходит</a></li>
+          <li><a href="#faq"      class="text-sm text-white/40 hover:text-gold-400 transition-colors">FAQ</a></li>
+          <li><a href="#reviews"  class="text-sm text-white/40 hover:text-gold-400 transition-colors">Отзывы</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="text-xs font-semibold text-white/40 uppercase tracking-widest mb-4">Контакты</h3>
+        <ul class="space-y-2">
+          <li><a href="tel:+79001234567"         class="text-sm text-white/40 hover:text-gold-400 transition-colors">+7 (900) 123-45-67</a></li>
+          <li><a href="https://t.me/voronova_psy" class="text-sm text-white/40 hover:text-gold-400 transition-colors" rel="noopener">Telegram</a></li>
+          <li class="text-sm text-white/20 pt-1">Москва, Патриаршие пруды</li>
+        </ul>
+      </div>
+    </div>
+    <div class="border-t border-white/8 pt-6 flex flex-col sm:flex-row justify-between items-center gap-3">
+      <p class="text-xs text-white/20">© 2024 Наталья Воронова. Все права защищены.</p>
+      <a href="#" class="text-xs text-white/20 hover:text-gold-400 transition-colors">Политика конфиденциальности</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+gsap.registerPlugin(ScrollTrigger);
+
+// ── Hero image fade in
+const heroImg = document.getElementById('hero-img');
+heroImg.addEventListener('load', () => { heroImg.style.opacity = '1'; });
+if (heroImg.complete) heroImg.style.opacity = '1';
+
+// ── Hero text animation
+const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+if (!reduced) {
+  const tl = gsap.timeline({ delay: .3 });
+  tl.from('#hw1 span', { y: 60, opacity: 0, duration: .9, ease: 'power3.out' })
+    .from('#hw2 span', { y: 60, opacity: 0, duration: .9, ease: 'power3.out' }, '-=.6')
+    .from('#hero em',  { y: 30, opacity: 0, duration: .7, ease: 'power3.out' }, '-=.5')
+    .from('#hero p',   { y: 20, opacity: 0, duration: .6, ease: 'power2.out' }, '-=.4')
+    .from('#hero .flex', { y: 15, opacity: 0, duration: .5, ease: 'power2.out' }, '-=.3');
+}
+
+// ── Nav scroll
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 30);
+}, { passive: true });
+
+// ── Mobile menu
+const burger = document.getElementById('burger');
+const mobMenu = document.getElementById('mob-menu');
+let menuOpen = false;
+burger.addEventListener('click', () => {
+  menuOpen = !menuOpen;
+  mobMenu.classList.toggle('open', menuOpen);
+  burger.setAttribute('aria-expanded', menuOpen);
+});
+mobMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+  menuOpen = false;
+  mobMenu.classList.remove('open');
+  burger.setAttribute('aria-expanded', 'false');
+}));
+
+// ── Counters
+if (!reduced) {
+  document.querySelectorAll('.counter-num').forEach(el => {
+    const target = parseInt(el.dataset.target, 10);
+    ScrollTrigger.create({
+      trigger: el,
+      start: 'top 85%',
+      once: true,
+      onEnter: () => {
+        gsap.to({ val: 0 }, {
+          val: target,
+          duration: 1.8,
+          ease: 'power2.out',
+          onUpdate() {
+            const v = Math.round(this.targets()[0].val);
+            el.textContent = target >= 100 ? v + '+' : v + (target === 96 ? '%' : '+');
+          },
+          onComplete() {
+            el.textContent = target >= 100 ? target + '+' : target + (target === 96 ? '%' : '+');
+          }
+        });
+      }
+    });
+  });
+} else {
+  document.querySelectorAll('.counter-num').forEach(el => {
+    const t = parseInt(el.dataset.target, 10);
+    el.textContent = t >= 100 ? t + '+' : t + (t === 96 ? '%' : '+');
+  });
+}
+
+// ── Section animations
+if (!reduced) {
+  gsap.from('.phil-head', { y: 40, opacity: 0, duration: .8, ease: 'power2.out', scrollTrigger: { trigger: '.phil-head', start: 'top 80%' } });
+  gsap.from('.phil-card', { y: 50, opacity: 0, duration: .7, ease: 'power2.out', stagger: .15, scrollTrigger: { trigger: '.phil-card', start: 'top 80%' } });
+  gsap.from('.about-photo', { x: -50, opacity: 0, duration: 1, ease: 'power3.out', scrollTrigger: { trigger: '.about-photo', start: 'top 75%' } });
+  gsap.from('.about-text',  { x:  50, opacity: 0, duration: 1, ease: 'power3.out', scrollTrigger: { trigger: '.about-text',  start: 'top 75%' } });
+  gsap.from('.svc-head', { y: 30, opacity: 0, duration: .7, scrollTrigger: { trigger: '.svc-head', start: 'top 80%' } });
+  gsap.from('.svc-card', { y: 40, opacity: 0, duration: .6, stagger: .1, scrollTrigger: { trigger: '.svc-card', start: 'top 80%' } });
+  gsap.from('.proc-head', { y: 30, opacity: 0, duration: .7, scrollTrigger: { trigger: '.proc-head', start: 'top 80%' } });
+  gsap.from('.proc-step', { y: 40, opacity: 0, duration: .6, stagger: .12, scrollTrigger: { trigger: '.proc-step', start: 'top 80%' } });
+
+  // Parallax on about image
+  gsap.to('#about-img', {
+    yPercent: -12,
+    ease: 'none',
+    scrollTrigger: { trigger: '.about-photo', start: 'top bottom', end: 'bottom top', scrub: true }
+  });
+}
+
+// ── FAQ accordion
+document.querySelectorAll('.faq-trigger').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const item = btn.closest('.faq-item');
+    const body = item.querySelector('.faq-body');
+    const isOpen = item.classList.contains('open');
+    // Close all
+    document.querySelectorAll('.faq-item').forEach(i => {
+      i.classList.remove('open');
+      i.querySelector('.faq-body').classList.remove('open');
+      i.querySelector('.faq-trigger').setAttribute('aria-expanded', 'false');
+    });
+    if (!isOpen) {
+      item.classList.add('open');
+      body.classList.add('open');
+      btn.setAttribute('aria-expanded', 'true');
+    }
+  });
+});
+
+// ── Testimonial slider
+let current = 0;
+const track = document.getElementById('slider');
+const dots = document.querySelectorAll('.dot');
+const total = track.children.length;
+
+function goTo(idx) {
+  current = (idx + total) % total;
+  track.style.transform = `translateX(-${current * 100}%)`;
+  dots.forEach((d, i) => {
+    d.classList.toggle('bg-gold-500', i === current);
+    d.classList.toggle('w-8', i === current);
+    d.classList.toggle('bg-white/20', i !== current);
+    d.classList.toggle('w-4', i !== current);
+    d.setAttribute('aria-selected', i === current);
+  });
+}
+document.getElementById('next-btn').addEventListener('click', () => goTo(current + 1));
+document.getElementById('prev-btn').addEventListener('click', () => goTo(current - 1));
+dots.forEach(d => d.addEventListener('click', () => goTo(+d.dataset.idx)));
+
+// Auto-advance
+let autoSlide = setInterval(() => goTo(current + 1), 6000);
+track.closest('section').addEventListener('mouseenter', () => clearInterval(autoSlide));
+track.closest('section').addEventListener('mouseleave', () => { autoSlide = setInterval(() => goTo(current + 1), 6000); });
+
+// ── Phone mask
+const fpInput = document.getElementById('fp');
+fpInput.addEventListener('input', e => {
+  let v = e.target.value.replace(/\D/g, '');
+  if (v.startsWith('8')) v = '7' + v.slice(1);
+  if (v.length && !v.startsWith('7')) v = '7' + v;
+  v = v.slice(0, 11);
+  let m = '+7';
+  if (v.length > 1) m += ' (' + v.slice(1, 4);
+  if (v.length >= 4) m += ')';
+  if (v.length > 4) m += ' ' + v.slice(4, 7);
+  if (v.length > 7) m += '-' + v.slice(7, 9);
+  if (v.length > 9) m += '-' + v.slice(9, 11);
+  e.target.value = m;
+});
+
+// ── Form submit
+const form = document.getElementById('appt-form');
+const formOk = document.getElementById('form-ok');
+form.addEventListener('submit', e => {
+  e.preventDefault();
+  const name = document.getElementById('fn');
+  const phone = document.getElementById('fp');
+  const privacy = document.getElementById('fpr');
+  let ok = true;
+  [name, phone].forEach(el => { if (!el.value.trim()) { el.classList.add('err'); ok = false; } });
+  if (!privacy.checked) { privacy.style.outline = '2px solid #e07070'; ok = false; }
+  if (!ok) return;
+  form.querySelectorAll('input,select,textarea,button[type=submit]').forEach(el => el.disabled = true);
+  formOk.classList.remove('hidden');
+  formOk.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+});
+form.querySelectorAll('input,select,textarea').forEach(el => {
+  el.addEventListener('input', () => { el.classList.remove('err'); el.style.outline = ''; });
+});
+</script>
+</body>
+</html>
